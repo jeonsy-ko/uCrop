@@ -131,7 +131,6 @@ public class UCropActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.ucrop_activity_photobox);
 
-
         LayoutInflater layoutInflater = LayoutInflater.from(UCropActivity.this);
         View rootView = layoutInflater.inflate(R.layout.ucrop_activity_photobox, null);
         setContentView(rootView);
@@ -722,7 +721,7 @@ public class UCropActivity extends AppCompatActivity {
             public WindowInsetsCompat onApplyWindowInsets(@NonNull View view, @NonNull WindowInsetsCompat windowInsets) {
                 Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
 
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)view.getLayoutParams();
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)view.getLayoutParams();
                 layoutParams.setMargins(0, insets.top, 0, insets.bottom);
                 view.setLayoutParams(layoutParams);
 
