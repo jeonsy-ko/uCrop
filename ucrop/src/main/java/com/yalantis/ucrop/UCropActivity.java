@@ -52,6 +52,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.transition.AutoTransition;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
@@ -123,7 +129,16 @@ public class UCropActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ucrop_activity_photobox);
+//        setContentView(R.layout.ucrop_activity_photobox);
+
+
+        LayoutInflater layoutInflater = LayoutInflater.from(UCropActivity.this);
+        View rootView = layoutInflater.inflate(R.layout.ucrop_activity_photobox, null);
+        setContentView(rootView);
+
+        if (Build.VERSION.SDK_INT >= 35) {
+            disableEdgeToEdge(rootView);
+        }
 
         final Intent intent = getIntent();
 
@@ -697,4 +712,25 @@ public class UCropActivity extends AppCompatActivity {
         setResult(UCrop.RESULT_ERROR, new Intent().putExtra(UCrop.EXTRA_ERROR, throwable));
     }
 
+    private void disableEdgeToEdge(View rootView) {
+        WindowInsetsControllerCompat windowInsetsControllerCompat = WindowCompat.getInsetsController(getWindow(), rootView);
+
+        ViewCompat.setOnApplyWindowInsetsListener(rootView, new OnApplyWindowInsetsListener() {
+
+            @NonNull
+            @Override
+            public WindowInsetsCompat onApplyWindowInsets(@NonNull View view, @NonNull WindowInsetsCompat windowInsets) {
+                Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)view.getLayoutParams();
+                layoutParams.setMargins(0, insets.top, 0, insets.bottom);
+                view.setLayoutParams(layoutParams);
+
+                windowInsetsControllerCompat.setAppearanceLightStatusBars(true);
+                windowInsetsControllerCompat.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+
+                return WindowInsetsCompat.CONSUMED;
+            }
+        });
+    }
 }
